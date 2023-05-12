@@ -1,25 +1,38 @@
 import logo from './logo.svg';
 import './App.css';
+import {useState, useEffect} from "react";
+import MovieDisplay from "./component/MovieDisplay";
+import Form from "./component/Form";
 
-function App() {
+export default function App() {
+  
+  const apiKey="25bd6601";
+  const [movie,setMovie]=useState(null);
+
+  const getMovie=async(searchTerm)=>{
+    const response = await fetch(
+      `http://www.omdbapi.com/?apikey=${apiKey}&t=${searchTerm}`
+    );
+    // Parse JSON response into a javascript object
+    const data = await response.json();
+    //set the Movie state to the movie
+    setMovie(data);
+  }
+
+
+  useEffect(() => {
+    getMovie("Super");
+  }, []);
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Form moviesearch={getMovie}/>
+      <MovieDisplay movie={movie}/>
     </div>
   );
 }
 
-export default App;
+
+
+
